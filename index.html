@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Auxílio Sleep</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      padding: 20px;
+      background: linear-gradient(to bottom, #900000, #550000);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .4);
+      z-index: 1;
+    }
+    h2 {
+      text-align: center;
+      color: #000;
+    }
+    .menu-item {
+      margin: 8px 0;
+      padding: 10px;
+      background: #900000;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      font-size: 16px;
+    }
+    .menu-item::before {
+      content: '►';
+      position: absolute;
+      left: 10px;
+      font-size: 14px;
+      transition: transform .2s;
+    }
+    .menu-item.open::before {
+      transform: rotate(90deg);
+    }
+    .sub-options {
+      display: none;
+      padding-left: 20px;
+    }
+    .checkbox-label input {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 10px;
+      accent-color: #9370DB;
+    }
+    .command-prompt {
+      margin-top: 20px;
+      padding: 10px;
+      background: #2e2e2e;
+      border: 1px solid #00f;
+      border-radius: 4px;
+      font-size: 14px;
+      max-height: 100px;
+      overflow-y: auto;
+      color: #fff;
+    }
+    #login-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+    #login-screen input {
+      padding: 10px;
+      margin: 6px;
+      border-radius: 5px;
+      border: none;
+      width: 200px;
+    }
+    #login-screen button {
+      padding: 10px 20px;
+      background: #900000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #msg {
+      margin-top: 10px;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<div id="login-screen">
+  <input id="user" placeholder="Usuário" />
+  <input id="pass" type="password" placeholder="Senha" />
+  <button onclick="checkLogin()">Entrar</button>
+  <div id="msg"></div>
+</div>
+
+<div class="container" id="panel" style="display:none;">
+  <h2>Headtracking Sleep</h2>
+  <div class="menu-item" onclick="toggleOptions(this,'trick-options')">Trick Funções</div>
+  <div class="sub-options" id="trick-options">
+    <label class="checkbox-label"><input type="checkbox" onchange="updatePrompt(this,'Ativa Auxilio')"> Ativa Auxílio</label><br>
+    <label class="checkbox-label"><input type="checkbox" onchange="updatePrompt(this,'No Recoil')"> No Recoil</label>
+  </div>
+  <div class="menu-item" onclick="toggleOptions(this,'legit-options')">Auxilio Funções</div>
+  <div class="sub-options" id="legit-options">
+    <label class="checkbox-label"><input type="checkbox" onchange="updatePrompt(this,'Aimbot 70%')"> Aimbot 70%</label><br>
+    <label class="checkbox-label"><input type="checkbox" onchange="updatePrompt(this,'Otimizar Sensi')"> Otimizar Sensi</label><br>
+    <label class="checkbox-label"><input type="checkbox" onchange="updatePrompt(this,'Mira Suave')"> Mira Suave</label>
+  </div>
+  <div class="command-prompt" id="commandPrompt"></div>
+</div>
+
+<script>
+function checkLogin() {
+  const u = document.getElementById('user').value;
+  const p = document.getElementById('pass').value;
+  if (u === 'sleepz' && p === '7789') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('panel').style.display = 'block';
+  } else {
+    document.getElementById('msg').innerText = 'Usuário ou senha incorretos';
+  }
+}
+function toggleOptions(el, id) {
+  const opt = document.getElementById(id);
+  const open = opt.style.display === 'block';
+  opt.style.display = open ? 'none' : 'block';
+  el.classList.toggle('open', !open);
+}
+function updatePrompt(cb, mod) {
+  const prompt = document.getElementById('commandPrompt');
+  let msg = mod + (cb.checked ? ' Ativado' : ' Desativado');
+  const color = cb.checked ? '#39FF14' : 'red';
+  prompt.innerHTML += '<span style="color:' + color + ';">' + msg + '</span><br>';
+}
+const canvas = document.getElementById('bg'), ctx = canvas.getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
+let particles = [];
+for (let i = 0; i < 80; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 1.5,
+    vy: (Math.random() - 0.5) * 1.5
+  });
+}
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < particles.length; i++) {
+    let p = particles[i];
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 2, 0, 2 * Math.PI);
+    ctx.fillStyle = 'red';
+    ctx.fill();
+    for (let j = i + 1; j < particles.length; j++) {
+      let q = particles[j], dx = p.x - q.x, dy = p.y - q.y;
+      if (Math.sqrt(dx * dx + dy * dy) < 100) {
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.strokeStyle = 'rgba(255,0,0,0.2)';
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
